@@ -6,7 +6,7 @@ var _config = require("./config.json");
 var opts = {
     url: []
     ,"limits": _config.limits
-    ,"port": _config.port || 8080
+    ,"port": _config.port || 1337
     ,"ip": _config.ip || "0.0.0.0"
 };
 
@@ -86,12 +86,12 @@ var file_types = {
     ,html: "text/html"
 }
 var httpd = http.createServer(function(req, res) {
-    
+
     //force close of long lasting requests. Hax?
     setTimeout((function(){
         this.res.end();
     }).bind({res: res}), _config.ultimateTimeout);
-    
+
     var uploadsize = 0;
     req.body = new Buffer(0);
     req.on("data", function(d) {
@@ -102,7 +102,7 @@ var httpd = http.createServer(function(req, res) {
         }
         req.body = Buffer.concat([req.body, d], (req.body.length + d.length));
     });
-    
+
     var route = null
     var urlpath = url.parse(req.url.replace("//","/")).pathname;
     opts.url.forEach(function(cv) {
